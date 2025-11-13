@@ -17,8 +17,8 @@
 
         <nav class="main-nav">
             <ul>
-                <li><a href="index.html">Accueil</a></li>
-                <li><a href="#">Reservation</a></li>
+                <li><a href="index.php">Accueil</a></li>
+                <li><a href="vues/listeEvents.php?controleur=Event&action=afficherTous">Liste des évènements</a></li>
             </ul>
         </nav>
 
@@ -29,15 +29,26 @@
         </div>
     </header>
 
-    <main class="hero-section">
-        <div class="hero-content">
-            <p class="museum-name">Musée de Fâ</p>
-            <h1 class="catchphrase">Le passé comme<br>si vous y étiez</h1>
-        </div>
-    </main>
+    
+        <?php
+			// si aucune information n'est présente dans l'url, le controleur par défaut sera 'accueil'
+			if (isset($_GET['controleur']))
+				$controleur = filter_var($_GET['controleur'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			else
+				$controleur = 'general';
+
+			switch ($controleur) {
+				case 'general':
+					include_once 'vues/accueil.html';
+					break;
+				case 'Event':
+					include_once 'controleurs/gestionEvent.php';
+					break;
+			}
+		?>
 
     <footer>
-        <p>@copyright par Zhou Tiago et Garcia Lucas</p>
+        <p>@copyright par Champiau Annaëlle, Dogny Yann, Garcia Lucas et Zhou Tiago</p>
     </footer>
 
 </body>

@@ -1,6 +1,9 @@
 DROP DATABASE IF EXISTS db_projetfa;
+CREATE DATABASE IF NOT EXISTS db_projetfa  CHARACTER SET utf8 COLLATE utf8_general_ci;
 
-CREATE DATABASE IF NOT EXISTS db_projetfa;
+DROP USER IF EXISTS 'Cli_Read'@'%';
+CREATE USER 'Cli_Read'@'%' IDENTIFIED BY 'pwdPourCli_R';
+
 USE db_projetfa;
 
 CREATE TABLE Evenement (
@@ -71,3 +74,5 @@ CREATE TABLE Contenir (
   CONSTRAINT Contenir_idReserv_FK FOREIGN KEY (idReserv) REFERENCES Reservation (idReserv),
   CONSTRAINT Contenir_idTarif_FK FOREIGN KEY (idTarif) REFERENCES Tarif (idTarif)
 ) ENGINE=InnoDB;
+
+GRANT SELECT ON `bd_projetfa`.`Evenement` TO 'Cli_Read'@'%';
