@@ -1,0 +1,182 @@
+/* --- styles.css --- */
+
+/* Reset et Police globale */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- HEADER --- */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5%; /* Marges sur les côtés */
+    background-color: #4a3334; /* Le marron foncé exact de la maquette */
+    height: 80px;
+    position: relative;
+}
+
+/* Création du Logo Carré Rouge en CSS */
+.logo {
+    background-color: #c7002e; /* Rouge du logo */
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    color: white;
+    font-weight: 800; /* Très gras */
+    font-size: 1.8rem;
+    cursor: pointer;
+}
+
+/* Le petit "LE" dans le coin du logo */
+.logo-small {
+    position: absolute;
+    top: 4px;
+    left: 5px;
+    font-size: 0.5rem;
+    font-weight: 400;
+}
+
+/* --- NAVIGATION (Avec l'animation d'étirement) --- */
+.main-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 40px; /* Espace entre les liens */
+}
+
+.main-nav li a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+    padding-bottom: 5px;
+    position: relative; /* Nécessaire pour l'animation */
+    display: inline-block;
+}
+
+/* La ligne soulignée (invisible au départ) */
+.main-nav li a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #ffffff;
+    
+    /* Animation : part du centre (scaleX 0) vers les bords */
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s ease-out;
+}
+
+/* Au survol ou si actif : la ligne s'étire (scaleX 1) */
+.main-nav li a:hover::after,
+.main-nav li a.active::after {
+    transform: scaleX(1);
+}
+
+
+/* --- HERO SECTION --- */
+.hero-section {
+    flex: 1; /* Prend tout l'espace restant */
+    width: 100%;
+    /* Assure-toi que le chemin de l'image est correct ici */
+    background-image: url('/images/musee.jpg'); 
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* Filtre sombre léger sur l'image */
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.1); 
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    width: 90%;
+    padding-bottom: 50px;
+}
+
+.museum-name {
+    font-size: 20px;
+    font-weight: 800;
+    color: #4a3334; /* Texte Marron comme sur la maquette */
+    margin-bottom: 10px;
+}
+
+.catchphrase {
+    font-size: 4rem;
+    font-weight: 800;
+    color: white;
+    line-height: 1.2;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+/* --- FOOTER --- */
+footer {
+    background-color: #4a3334;
+    color: white;
+    text-align: right; /* Aligné à droite sur Desktop */
+    padding: 40px 5%;
+    font-size: 14px;
+}
+
+/* --- BURGER MENU (Mobile) --- */
+.burger-menu {
+    display: none; /* Caché sur PC */
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.burger-menu span {
+    width: 30px;
+    height: 4px;
+    background-color: white;
+}
+
+/* --- RESPONSIVE (Tablette et Mobile) --- */
+@media (max-width: 768px) {
+    
+    /* Cacher le menu desktop */
+    .main-nav {
+        display: none;
+    }
+    
+    /* Afficher le burger */
+    .burger-menu {
+        display: flex;
+    }
+
+    /* Ajustements textes */
+    .catchphrase {
+        font-size: 2.5rem;
+    }
+    
+    footer {
+        text-align: center; /* Centré sur mobile */
+    }
+}
