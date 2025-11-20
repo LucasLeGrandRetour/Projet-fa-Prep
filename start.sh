@@ -3,6 +3,20 @@
 
 # Définir le chemin vers les dossiers web et web/API
 WEB_DIR="site"
+DOC_DIR="documentation"
+
+phpMyAdmin_DIR="../../usr/src/phpmyadmin"
+
+# Créer le répertoire /run/mysqld si nécessaire et définir les permissions
+if [ ! -d /run/mysqld ]; then
+    echo "Création du répertoire /run/mysqld..."
+    sudo mkdir -p /run/mysqld
+    sudo chown mysql:mysql /run/mysqld
+fi
+
+# Démarrer le service MariaDB
+echo "Démarrage du service MariaDB..."
+sudo service mariadb start
 
 # Executer le script d'initialisation de la base de données database/scripts/initDBB.sh
 # echo "Exécution du script initDBB.sh..."
@@ -23,4 +37,22 @@ if is_port_in_use $WEB_PORT; then
 else
     echo "Démarrage du serveur PHP sur http://0.0.0.0:$WEB_PORT depuis $WEB_DIR"
     php -S 0.0.0.0:$WEB_PORT -t $WEB_DIR &
+fi
+
+# Démarrage du serveur PHP pour le dossier doc
+DOC_PORT=8001
+if is_port_in_use $DOC_PORT; then
+    echo "Le serveur PHP pour le dossier doc est déjà démarré sur le port $DOC_PORT"
+else
+    echo "Démarrage du serveur PHP pour le dossier doc sur http://0.0.0.0:$DOC_PORT depuis $DOC_DIR"
+    php -S 0.0.0.0:$DOC_PORT -t $DOC_DIR &
+fi
+
+# Démarrage du serveur PHP pour phpMyAdmin
+PHPMYADMIN_PORT=8080
+if is_port_in_use $PHPMYADMIN_PORT; then
+    echo "Le serveur PHP pour phpMyAdmin est déjà démarré sur le port $PHPMYADMIN_PORT"
+else
+    echo "Démarrage du serveur PHP pour phpMyAdmin sur http://0.0.0.0:$PHPMYADMIN_PORT"
+    php -S 0.0.0.0:$PHPMYADMIN_PORT -t $phpMyAdmin_DIR &
 fi
