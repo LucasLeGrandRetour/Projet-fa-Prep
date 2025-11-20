@@ -6,6 +6,8 @@
     <title>Musée de Fâ - Le passé comme si vous y étiez</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/styles.css">
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ENjdO4Dr2bkBIFxQpeoYz1FQZrF2b4QmZ6bZrZlqQ2o5p6b6R9E7x0zW5y3y1Z" crossorigin="anonymous">
 </head>
 <body>
 
@@ -52,4 +54,5 @@
     </footer>
 
 </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoYz1FQZrF2b4QmZ6bZrZlqQ2o5p6b6R9E7x0zW5y3y1Z" crossorigin="anonymous"></script>
 </html>
