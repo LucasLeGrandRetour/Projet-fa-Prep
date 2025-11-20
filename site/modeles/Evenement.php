@@ -5,14 +5,12 @@ class Evenement
     private int $idEvent;
     private string $libelleEvent;
     private string $descriptionEvent;
-    private int $capaMaxi;
 
-    public function __construct(int $id, string $lib, string $desc, int $max)
+    public function __construct(int $id, string $lib, string $desc)
     {
         $this->idEvent = $id;
         $this->libelleEvent = $lib;
         $this->descriptionEvent = $desc;
-        $this->capaMaxi = $max;
     }
 
     public function getId(): int
@@ -28,11 +26,6 @@ class Evenement
     public function getDescEvent(): string
     {
         return $this->descriptionEvent;
-    }
-
-    public function getCapaMaxi(): int
-    {
-        return $this->capaMaxi;
     }
 }
 
