@@ -2,19 +2,43 @@
 include_once 'configBdd.php';
 include_once 'BaseDAO.php';
 include_once 'Evenement.php';
+include_once 'Horaire.php';
+include_once 'Tarif.php';
 
+/**
+ * DAO pour gérer les événements.
+ * Permet de récupérer les événements, leurs horaires, tarifs et réservations.
+ */
 class BaseEvenementDAO extends BaseDAO
 {
+    /**
+     * Constructeur.
+     */
     public function __construct()
     {
         parent::__construct();
     }
 
+    /**
+     * Initialise la connexion selon le rôle.
+     *
+     * @param string $role Rôle pour la connexion (CliRead, CliAll, CliWrite).
+     */
     private function setConnexionSelonRole(string $role): void
     {
-        $this->setConnexionBase($_ENV['local_dsn'], $_ENV[$role], $_ENV['pwd' . $role], $_ENV['options']);
+        $this->setConnexionBase(
+            $_ENV['local_dsn'],
+            $_ENV[$role],
+            $_ENV['pwd' . $role],
+            $_ENV['options']
+        );
     }
 
+    /**
+     * Récupère tous les événements.
+     *
+     * @return Evenement[] Tableau d'objets Evenement.
+     */
     public function getLesEvenements(): array
     {
         try {
@@ -43,7 +67,13 @@ class BaseEvenementDAO extends BaseDAO
         }
     }
 
-    public function getUnEvenement(int $idEvent)
+    /**
+     * Récupère un événement par son ID.
+     *
+     * @param int $idEvent ID de l'événement.
+     * @return Evenement|null L'événement ou null si non trouvé.
+     */
+    public function getUnEvenement(int $idEvent): ?Evenement
     {
         try {
             $this->setConnexionSelonRole("CliAll");
@@ -70,6 +100,12 @@ class BaseEvenementDAO extends BaseDAO
         }
     }
 
+    /**
+     * Récupère les horaires d'un événement.
+     *
+     * @param int $idEvent ID de l'événement.
+     * @return Horaire[] Tableau d'objets Horaire.
+     */
     public function getHorairesEvenement(int $idEvent): array
     {
         try {
@@ -107,6 +143,11 @@ class BaseEvenementDAO extends BaseDAO
         }
     }
 
+    /**
+     * Récupère tous les tarifs.
+     *
+     * @return Tarif[] Tableau d'objets Tarif.
+     */
     public function getLesTarifs(): array
     {
         try {
@@ -135,12 +176,17 @@ class BaseEvenementDAO extends BaseDAO
         }
     }
 
+    /**
+     * Calcule le nombre de places restantes pour un horaire donné.
+     *
+     * @param int $idConcerner ID de la ligne Concerner.
+     * @return int Nombre de places restantes.
+     */
     public function getPlacesRestantes(int $idConcerner): int
     {
         try {
             $this->setConnexionSelonRole("CliAll");
 
-            // Capacité max
             $sql = "SELECT capaMaxi FROM Concerner WHERE idConcerner = ?";
             $stmt = $this->prepare($sql);
             $stmt->execute([$idConcerner]);
@@ -150,7 +196,6 @@ class BaseEvenementDAO extends BaseDAO
 
             $capaMax = (int)$data['capaMaxi'];
 
-            // Réservations
             $sql = "SELECT IFNULL(SUM(nbPlace),0)
                     FROM Contenir CO
                     JOIN Reservation R ON R.idReserv = CO.idReserv
@@ -168,27 +213,32 @@ class BaseEvenementDAO extends BaseDAO
         }
     }
 
+    /**
+     * Calcule le nombre total de places réservées pour un événement.
+     *
+     * @param int $id ID de l'événement.
+     * @return int Nombre de places réservées.
+     */
     public function setReservation(int $id): int 
     {
-    try {
-        $this->setConnexionSelonRole("CliWrite");
+        try {
+            $this->setConnexionSelonRole("CliWrite");
 
-        $sql = "SELECT COALESCE(SUM(c.nbPlace), 0) AS nbPlaces
-                FROM Reservation r
-                INNER JOIN Contenir c ON c.idReserv = r.idReserv
-                WHERE r.idEvent = ?";
+            $sql = "SELECT COALESCE(SUM(c.nbPlace), 0) AS nbPlaces
+                    FROM Reservation r
+                    INNER JOIN Contenir c ON c.idReserv = r.idReserv
+                    WHERE r.idEvent = ?";
 
-        $stmt = $this->prepare($sql);
-        $stmt->execute([$id]);
+            $stmt = $this->prepare($sql);
+            $stmt->execute([$id]);
 
-        $ligne = $stmt->fetch(PDO::FETCH_ASSOC);
+            $ligne = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return (int)$ligne['nbPlaces'];
+            return (int)$ligne['nbPlaces'];
 
-    } catch (Exception $e) {
-        echo "Erreur : " . $e->getMessage();
-        return 0;
+        } catch (Exception $e) {
+            echo "Erreur : " . $e->getMessage();
+            return 0;
         }
     }
-
 }
