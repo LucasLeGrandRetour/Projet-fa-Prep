@@ -68,4 +68,28 @@ class BaseEvenementDAO extends BaseDAO
             return null; // Retourne un tableau vide en cas d’erreur
         }
     }
+
+    public function getReservationUnEvennement(int $idEvent): int 
+    {
+    try {
+        $this->setConnexionSelonRole("CliRead");
+
+        $sql = "SELECT COALESCE(SUM(c.nbPlace), 0) AS nbPlaces
+                FROM Reservation r
+                INNER JOIN Contenir c ON c.idReserv = r.idReserv
+                WHERE r.idEvent = ?";
+
+        $stmt = $this->prepare($sql);
+        $stmt->execute([$idEvent]);
+
+        $ligne = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return (int)$ligne['nbPlaces'];
+
+    } catch (Exception $e) {
+        echo "Erreur : " . $e->getMessage();
+        return 0;
+        }
+    }
+
 }

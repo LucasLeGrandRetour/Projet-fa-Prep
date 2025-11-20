@@ -17,7 +17,7 @@ class Evenement
 
     public function getId(): int
     {
-        return $this->id;
+        return $this->idEvent;
     }
 
     public function getLibEvent(): string
