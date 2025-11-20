@@ -4,7 +4,6 @@ CREATE TABLE Evenement (
   idEvent INT NOT NULL AUTO_INCREMENT,
   libelleEvent VARCHAR(100) NOT NULL,
   descriptionEvent VARCHAR(500) NOT NULL,
-  capaMaxi INT NOT NULL,
   CONSTRAINT Evenement_PK PRIMARY KEY (idEvent)
 ) ENGINE=InnoDB;
 
@@ -30,19 +29,21 @@ CREATE TABLE Tarif (
 ) ENGINE=InnoDB;
 
 CREATE TABLE Concerner (
+  idConcerner INT NOT NULL AUTO_INCREMENT,
   idHoraire INT NOT NULL,
   idEvent INT NOT NULL,
-  CONSTRAINT Concerner_PK PRIMARY KEY (idHoraire, idEvent),
-  CONSTRAINT Concerner_idHoraire_FK FOREIGN KEY (idHoraire) REFERENCES Horaires (idHoraire),
-  CONSTRAINT Concerner_idEvent_FK FOREIGN KEY (idEvent) REFERENCES Evenement (idEvent)
+  capaMaxi INT NOT NULL,
+  PRIMARY KEY (idConcerner),
+  FOREIGN KEY (idHoraire) REFERENCES Horaires(idHoraire),
+  FOREIGN KEY (idEvent) REFERENCES Evenement(idEvent)
 ) ENGINE=InnoDB;
 
 CREATE TABLE User (
   idUser INT NOT NULL AUTO_INCREMENT,
-  nom VARCHAR(20) NOT NULL,
-  prenom VARCHAR(20) NOT NULL,
-  mail VARCHAR(20) NOT NULL,
-  mdp VARCHAR(20) NOT NULL,
+  nom VARCHAR(30) NOT NULL,
+  prenom VARCHAR(30) NOT NULL,
+  mail VARCHAR(50) NOT NULL,
+  mdp VARCHAR(50) NOT NULL,
   GDU VARCHAR(50) NOT NULL,
   idDroit INT NOT NULL,
   CONSTRAINT User_PK PRIMARY KEY (idUser),
@@ -53,11 +54,11 @@ CREATE TABLE Reservation (
   idReserv INT NOT NULL AUTO_INCREMENT,
   dateReserv DATE NOT NULL,
   heureReserv TIME NOT NULL,
-  idEvent INT NOT NULL,
   idUser INT NOT NULL,
-  CONSTRAINT Reservation_PK PRIMARY KEY (idReserv),
-  CONSTRAINT Reservation_idEvent_FK FOREIGN KEY (idEvent) REFERENCES Evenement (idEvent),
-  CONSTRAINT Reservation_idUser_FK FOREIGN KEY (idUser) REFERENCES User (idUser)
+  idConcerner INT NOT NULL,
+  PRIMARY KEY (idReserv),
+  FOREIGN KEY (idUser) REFERENCES User(idUser),
+  FOREIGN KEY (idConcerner) REFERENCES Concerner(idConcerner)
 ) ENGINE=InnoDB;
 
 CREATE TABLE Contenir (
@@ -70,18 +71,49 @@ CREATE TABLE Contenir (
 ) ENGINE=InnoDB;
 
 
-INSERT INTO Evenement VALUES ('1', 'Evenement de test n°1', "Cet évènement est un test pour l'inesrion et le bon fonctionnement des fonctionnalités en relation avec les évènements.", 50);
-INSERT INTO Evenement VALUES ('2', 'Evenement de test n°2', "test encore une fois", 10);
+INSERT INTO Evenement (idEvent, libelleEvent, descriptionEvent) VALUES
+(1, 'Evenement de test n°1', "Cet évènement est un test pour l'insertion et le bon fonctionnement des fonctionnalités en relation avec les évènements."),
+(2, 'Evenement de test n°2', "Test encore une fois.");
 
-INSERT INTO Horaires(idHoraire, date, heureDeb) VALUES ('1', '2025-11-20', '08:30:00');
-INSERT INTO Horaires(idHoraire, date, heureDeb, heureFin) VALUES ('2', '2025-11-20', '08:30:00', '08:40:00');
-INSERT INTO Horaires(idHoraire, date, heureDeb) VALUES ('3', '2025-11-22', '16:30:00');
-INSERT INTO Horaires(idHoraire, date, heureDeb) VALUES ('4', '2025-11-22', '15:30:00');
+INSERT INTO Horaires (idHoraire, date, heureDeb, heureFin) VALUES
+(1, '2025-11-20', '08:30:00', NULL),
+(2, '2025-11-20', '08:30:00', '08:40:00'),
+(3, '2025-11-22', '16:30:00', NULL),
+(4, '2025-11-22', '15:30:00', NULL);
 
-INSERT INTO Concerner VALUES ('1', '1');
-INSERT INTO Concerner VALUES ('2', '1');
-INSERT INTO Concerner VALUES ('3', '1');
-INSERT INTO Concerner VALUES ('4', '2');
+INSERT INTO typeDroit (idDroit, libelleDroit) VALUES
+(1, 'Admin'),
+(2, 'client'),
+(3, 'employe');
+
+INSERT INTO Tarif (idTarif, libelleTarif, prix) VALUES
+(1, 'Enfant', 10.0),
+(2, 'Adulte', 20.0),
+(3, 'Senior', 15.0);
+
+INSERT INTO Concerner (idConcerner, idHoraire, idEvent, capaMaxi) VALUES
+(1, 1, 1, 50),
+(2, 2, 1, 50),
+(3, 3, 1, 50),
+(4, 4, 2, 10);
+
+INSERT INTO User (idUser, nom, prenom, mail, mdp, GDU, idDroit) VALUES
+(1, 'Dupont', 'Jean', 'jean.dupont@test.com', 'mdp123', 'GDU1', 2),
+(2, 'Martin', 'Claire', 'claire.martin@test.com', 'mdp456', 'GDU2', 3);
+
+INSERT INTO Reservation (idReserv, dateReserv, heureReserv, idUser, idConcerner) VALUES
+(1, '2025-11-20', '08:30:00', 2, 1),
+(2, '2025-11-20', '08:30:00', 2, 2);
+
+INSERT INTO Contenir (idReserv, idTarif, nbPlace) VALUES
+(1, 1, 2), 
+(1, 2, 1),
+(2, 2, 2);
+
 
 
 GRANT SELECT ON `db_projetfa`.`Evenement` TO 'Cli_Read'@'%';
+
+GRANT SELECT, INSERT, UPDATE ON `db_projetfa`.`Concerner` TO 'Cli_Write'@'%';
+GRANT SELECT, INSERT, UPDATE ON `db_projetfa`.`Reservation` TO 'Cli_Write'@'%';
+GRANT SELECT, INSERT, UPDATE ON `db_projetfa`.`Contenir` TO 'Cli_Write'@'%';

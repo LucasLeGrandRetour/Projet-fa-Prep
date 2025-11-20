@@ -2,11 +2,11 @@
 echo "Exécution du script reloadDBB.sh..."
 
 # Variables de configuration
-DB_NAME="tp_sio2_bdjourneeintegration"
+DB_NAME="db_projetfa"
 DB_USER="admin"
 DB_PASSWORD="admin_password"
 BACKUP_DIR="database/sources-sql"
-BACKUP_FILE="$BACKUP_DIR/tp_sio2_bdjourneeintegration.sql"
+BACKUP_FILE="$BACKUP_DIR/db_projetfa.sql"
 
 # Vérifier si le fichier de sauvegarde existe
 if [ ! -f "$BACKUP_FILE" ]; then

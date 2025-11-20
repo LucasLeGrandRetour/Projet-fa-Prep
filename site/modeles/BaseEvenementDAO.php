@@ -69,10 +69,10 @@ class BaseEvenementDAO extends BaseDAO
         }
     }
 
-    public function getReservationUnEvennement(int $idEvent): int 
+    public function setReservation(int $id): int 
     {
     try {
-        $this->setConnexionSelonRole("CliRead");
+        $this->setConnexionSelonRole("CliWrite");
 
         $sql = "SELECT COALESCE(SUM(c.nbPlace), 0) AS nbPlaces
                 FROM Reservation r
@@ -80,7 +80,7 @@ class BaseEvenementDAO extends BaseDAO
                 WHERE r.idEvent = ?";
 
         $stmt = $this->prepare($sql);
-        $stmt->execute([$idEvent]);
+        $stmt->execute([$id]);
 
         $ligne = $stmt->fetch(PDO::FETCH_ASSOC);
 
