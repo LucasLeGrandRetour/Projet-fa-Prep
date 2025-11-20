@@ -1,4 +1,4 @@
-/* --- styles.css --- */
+/* --- styles.css FINAL MERGED (Base + Cleaned + Responsive + Sans doublons) --- */
 
 /* Reset et Police globale */
 * {
@@ -7,57 +7,12 @@
     box-sizing: border-box;
 }
 
-/* ------------------ OVERRIDES POUR APPROXIMER LA MAQUETTE ------------------ */
-
-/* Wrapper principal de la page détail : grande carte arrondie sur fond gris */
-.reservation-page-wrapper { padding: 30px 40px; }
-.reservation-card { max-width: 1100px; margin: 20px auto; border-radius: 18px; }
-.reservation-inner { background: #ececec; border-radius: 14px; padding: 22px; }
-
-/* Image principale arrondie et bloc blanc autour */
-.reservation-inner .event-image-top { border-radius: 12px; display:block; }
-
-/* Side box (tarifs, places) */
-.reservation-side { padding: 12px; }
-.reservation-count-box { display:inline-block; padding:10px 16px; border:3px solid #caa68f; border-radius:6px; background:#fff; font-weight:700; font-size:1.1rem; }
-.tarif-box { display:block; padding:10px 12px; border:2px solid #caa68f; border-radius:6px; background:#fff; width:140px; text-align:center; margin-bottom:12px; font-weight:700; }
-
-/* Icons and accent colors */
-.icon-person, .icon-euro { color:#c65a2a; font-size:1.4rem; }
-
-/* Buttons like mockup */
-.btn-annuler-custom { background:#b11d20; border-radius:10px; padding:12px 36px; border:none; }
-.btn-reserver-custom { background:#c95a20; border-radius:10px; padding:12px 36px; border:none; }
-
-/* Top search strip style */
-.top-search-strip { background:#6b3b3b; border-radius:6px; }
-.top-search-strip .form-control { background:#fff; }
-
-/* Event cards style to match mockup (white card with shadow and rounded corners) */
-.event-card-custom { background:#fff; border-radius:10px; box-shadow:0 8px 20px rgba(0,0,0,0.08); overflow:hidden; }
-.event-card-custom img { height:190px; width:100%; object-fit:cover; display:block; }
-.event-card-body { padding:14px; display:flex; align-items:center; justify-content:space-between; }
-.event-card-body .event-title { color:#111; font-weight:600; }
-.btn-detail-custom { background:#8f5b5b; border-radius:20px; padding:8px 16px; color:#fff; border:none; }
-
-/* Layout tweaks for spacing like the design */
-.events-main-area { padding-top:8px; }
-.sidebar-filters { padding:30px 22px; }
-
-@media (max-width: 991px) {
-    .reservation-inner { padding: 12px; }
-    .reservation-card { margin: 10px; }
-}
-
-/* final small tweaks */
-.description-text { color:#222; }
-
-
 body {
     font-family: 'Montserrat', sans-serif;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    padding-bottom: 60px; /* pour le footer fixé */
 }
 
 /* --- HEADER --- */
@@ -65,114 +20,93 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 5%; /* Marges sur les côtés */
-    background-color: #4a3334; /* Le marron foncé exact de la maquette */
+    padding: 0 5%;
+    background-color: #4a3334;
     height: 80px;
-    position: relative;
 }
 
-/* Création du Logo Carré Rouge en CSS */
+/* Logo carré rouge */
 .logo {
-    background-color: #c7002e; /* Rouge du logo */
+    background-color: #c7002e;
     width: 60px;
     height: 60px;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
     color: white;
-    font-weight: 800; /* Très gras */
+    font-weight: 800;
     font-size: 1.8rem;
+    position: relative;
     cursor: pointer;
 }
-
-/* Le petit "LE" dans le coin du logo */
 .logo-small {
     position: absolute;
     top: 4px;
     left: 5px;
     font-size: 0.5rem;
-    font-weight: 400;
 }
 
-/* --- NAVIGATION (Avec l'animation d'étirement) --- */
+/* NAVIGATION */
 .main-nav ul {
     list-style: none;
     display: flex;
-    gap: 40px; /* Espace entre les liens */
+    gap: 40px;
 }
-
-.main-nav li a {
+.main-nav a {
     text-decoration: none;
     color: white;
     font-size: 18px;
     font-weight: 500;
     padding-bottom: 5px;
-    position: relative; /* Nécessaire pour l'animation */
-    display: inline-block;
+    position: relative;
 }
-
-/* La ligne soulignée (invisible au départ) */
-.main-nav li a::after {
+.main-nav a::after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
     height: 2px;
-    background-color: #ffffff;
-    
-    /* Animation : part du centre (scaleX 0) vers les bords */
+    background-color: white;
     transform: scaleX(0);
     transform-origin: center;
-    transition: transform 0.3s ease-out;
+    transition: .3s ease-out;
 }
-
-/* Au survol ou si actif : la ligne s'étire (scaleX 1) */
-.main-nav li a:hover::after,
-.main-nav li a.active::after {
+.main-nav a:hover::after,
+.main-nav a.active::after {
     transform: scaleX(1);
 }
 
-
 /* --- HERO SECTION --- */
 .hero-section {
-    flex: 1; /* Prend tout l'espace restant */
+    flex: 1;
     width: 100%;
-    /* Assure-toi que le chemin de l'image est correct ici */
-    background-image: url('/images/musee.jpg'); 
+    background-image: url('/images/musee.jpg');
     background-size: cover;
     background-position: center;
-    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
     text-align: center;
 }
-
-/* Filtre sombre léger sur l'image */
 .hero-section::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.1); 
-    z-index: 1;
+    inset: 0;
+    background: rgba(0,0,0,0.1);
 }
-
 .hero-content {
     position: relative;
     z-index: 2;
     width: 90%;
     padding-bottom: 50px;
 }
-
 .museum-name {
     font-size: 20px;
     font-weight: 800;
-    color: #4a3334; /* Texte Marron comme sur la maquette */
-    margin-bottom: 10px;
+    color: #4a3334;
 }
-
 .catchphrase {
     font-size: 4rem;
     font-weight: 800;
@@ -181,205 +115,163 @@ body {
     text-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 
-/* --- FOOTER --- */
+/* --- FOOTER FIXÉ --- */
 footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
     background-color: #4a3334;
     color: white;
-    text-align: right; /* Aligné à droite sur Desktop */
+    text-align: right;
     padding: 40px 5%;
     font-size: 14px;
+    z-index: 20;
 }
 
 /* --- BURGER MENU (Mobile) --- */
 .burger-menu {
-    display: none; /* Caché sur PC */
+    display: none;
     flex-direction: column;
     gap: 5px;
     cursor: pointer;
 }
-
 .burger-menu span {
     width: 30px;
     height: 4px;
     background-color: white;
 }
 
-/* --- CSS Ajouté pour les VUES LISTE et RÉSERVATION (Maquette) --- */
-
-/* 1. Couleurs et Fonds généraux */
+/* --- LISTE / FILTRES --- */
 .sidebar-filters {
-    background-color: #f5f5f5; /* Gris clair de la colonne de gauche */
+    background: #efefef;
+    padding: 30px 22px;
+    min-height: 78vh;
+    border-right: 1px solid #ddd;
 }
 .events-main-area {
-    background-color: white; /* Fond blanc de la colonne de droite */
-    border-left: 1px solid #e0e0e0; /* Ligne de séparation légère */
+    background: #fff;
+    border-left: 1px solid #e0e0e0;
+    padding-top: 8px;
 }
-.search-bar-top-custom {
-    max-width: 90%; 
-    margin-left: 0;
-}
-
-/* Top brown strip for search in list view */
 .top-search-strip {
-    background-color: #6a403f; /* slightly lighter than header */
+    background: #6b3b3b;
     padding: 14px 20px;
+    border-radius: 6px;
 }
 
-/* Event cards (liste) */
+/* --- CARTES ÉVÉNEMENTS --- */
 .event-card-custom {
-    background: transparent;
-    border-radius: 12px;
-}
-.event-card-custom img { display:block; }
-.event-card-body .event-title {
-    font-size: 0.95rem;
-    color: #222;
-}
-.btn-detail-custom {
-    background-color: #8f5b5b; /* muted brown/pink like design */
-    color: white;
-    padding: 6px 14px;
-    border-radius: 22px;
-    border: none;
-    font-weight: 600;
-}
-.btn-detail-custom:hover { background-color: #7a4848; }
-
-/* Sidebar filters */
-.sidebar-filters {
-    background-color: #efefef;
-    min-height: 78vh;
-    border-right: 1px solid #e0dcdc;
-}
-
-/* Make the search input and button rounded like mockup */
-.search-bar-top-custom .form-control { border-radius: 30px 0 0 30px; }
-.search-bar-top-custom .btn { border-radius: 0 30px 30px 0; }
-
-/* Reservation (detail) page exact look adjustments */
-.reservation-card { background-color: #fff; }
-.reservation-card .event-image-top { border-radius: 12px 12px 0 0; }
-.reservation-info-section { background: transparent; }
-.reservation-card .card-body { background: #e9e6e6; }
-
-.reservation-count-box {
-    display:inline-block;
-    padding:8px 12px;
-    border:3px solid #caa68f;
-    border-radius:6px;
-    background:#fff8f4;
-    font-weight:700;
-}
-
-.tarif-box {
-    display:block;
-    padding:6px 12px;
-    border:2px solid #caa68f;
-    border-radius:6px;
-    background:#fff8f4;
-    width:120px;
-    text-align:center;
-    margin-bottom:12px;
-}
-
-.icon-person, .icon-euro { color:#c65a2a; font-size: 1.2rem; }
-
-.btn-annuler-custom { background-color: #b11d20; border-radius:10px; padding:12px 36px; }
-.btn-reserver-custom { background-color: #c95a20; border-radius:10px; padding:12px 36px; }
-
-.date-duration-row .date-range, .date-duration-row .duration-value { color:#c65a2a; }
-
-/* Fine tuning responsive */
-@media (max-width: 991px) {
-    .sidebar-filters { min-height: auto; }
-    .search-bar-top-custom { max-width: 70%; }
-}
-
-/* 2. Style des cartes Événement (Liste) */
-.event-card-custom {
-    border: 1px solid #e0e0e0; 
-    border-radius: 4px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
     overflow: hidden;
-    transition: box-shadow 0.2s;
+    transition: .2s;
 }
 .event-card-custom:hover {
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
+.event-card-custom img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+}
+.event-card-body {
+    padding: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.event-title {
+    font-weight: 600;
+}
 .btn-detail-custom {
-    background-color: #c7002e; /* Rouge du logo pour le bouton Détails */
+    background: #c7002e;
     color: white;
     padding: 8px 30px;
-    min-width: 100px;
+    border-radius: 22px;
+    border: none;
     font-weight: bold;
 }
 .btn-detail-custom:hover {
-    background-color: #a00024;
-}
-.btn-search-icon {
-    background-color: #4a3334; /* Marron pour le bouton de recherche */
-    color: white;
+    background: #a00024;
 }
 
-/* 3. Styles Réservation (Colonne Droite Maquette) */
+/* --- PAGE RÉSERVATION --- */
 .reservation-page-wrapper {
-    background-color: #f5f5f5; 
-    padding: 40px 15px; 
+    background: #f5f5f5;
+    padding: 40px 15px;
 }
 .reservation-card {
+    background: #fff;
     max-width: 900px;
     margin: auto;
     border-radius: 8px;
     overflow: hidden;
 }
-.reservation-count {
-    color: #c7002e; /* Rouge pour les places restantes */
-    font-size: 2.2rem;
+.event-image-top {
+    border-radius: 12px 12px 0 0;
 }
-.icon-person, .icon-euro {
-    color: #c7002e; 
+.reservation-info-section {
+    background: transparent;
+}
+
+.reservation-count-box,
+.tarif-box {
+    background: #fff8f4;
+    border: 2px solid #caa68f;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+.reservation-count-box {
+    border-width: 3px;
+}
+.icon-person,
+.icon-euro {
+    color: #c7002e;
+    font-size: 1.2rem;
 }
 .btn-annuler-custom {
-    background-color: #c7002e; /* Rouge pour Annuler */
+    background: #c7002e;
+    padding: 12px 36px;
+    border-radius: 10px;
     border: none;
 }
 .btn-reserver-custom {
-    background-color: #ff5733; /* Rouge/Orange pour Réserver */
+    background: #ff5733;
+    padding: 12px 36px;
+    border-radius: 10px;
     border: none;
 }
 
-/* 4. Responsive (Ajustements Mobile) */
-@media (max-width: 767.98px) {
-    .events-main-area {
-        border-left: none; 
-        background-color: transparent; /* Fond gris continue sur mobile */
+/* --- RESPONSIVE --- */
+@media (max-width: 991px) {
+    .reservation-card { margin: 10px; }
+}
+
+@media (max-width: 768px) {
+    .main-nav { display: none; }
+    .burger-menu { display: flex; }
+    .catchphrase { font-size: 2.5rem; }
+
+    footer {
+        text-align: center;
+        padding: 25px 0;
     }
-    .reservation-info-section {
-        border-left: none; /* Enlève la ligne de séparation verticale sur mobile */
+
+    .sidebar-filters {
+        min-height: auto;
+    }
+    .events-main-area {
+        border-left: none;
+        background: transparent;
     }
 }
 
-/* --- RESPONSIVE (Tablette et Mobile) --- */
-@media (max-width: 768px) {
-    
-    /* Cacher le menu desktop */
-    .main-nav {
-        display: none;
+@media (max-width: 767px) {
+    .reservation-info-section {
+        border-left: none;
     }
-    
-    /* Afficher le burger */
-    .burger-menu {
-        display: flex;
-    }
-
-    /* Ajustements textes */
-    .catchphrase {
-        font-size: 2.5rem;
-    }
-    
-    footer {
-        text-align: center; /* Centré sur mobile */
-    }
-
-
-    
 }

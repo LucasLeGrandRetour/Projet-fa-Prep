@@ -21,29 +21,9 @@ switch ($action) {
     case 'afficherUn' : 
         $connexionBD = new BaseEvenementDAO();
         if (isset($_GET['id'])){
-            $id = intval($_GET['id']);
+            $id = $_GET['id'];
             $event = $connexionBD->getUnEvenement($id);
-            if ($event !== null) {
-                // Préparer le tableau $details attendu par la vue reservation.php
-                $placesReservees = $connexionBD->setReservation($id);
-                $placesRestantes = max(0, $event->getCapaMaxi() - $placesReservees);
-
-                $details = [
-                    'idEvent' => $event->getId(),
-                    'libelleEvent' => $event->getLibEvent(),
-                    'descriptionEvent' => $event->getDescEvent(),
-                    // Valeurs par défaut si non présentes en base (modifiables)
-                    'prix_enfant' => 5,
-                    'prix_adulte' => 3421,
-                    'duree' => 45,
-                    'debut' => '09:00',
-                    'fin' => '09:45'
-                ];
-
-                include_once 'vues/reservation.php';
-            } else {
-                include_once 'vues/accueil.html';
-            }
+            include_once 'vues/eventDetail.php';
         } else {
             include_once 'vues/accueil.html';
         }
