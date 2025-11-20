@@ -75,4 +75,19 @@ CREATE TABLE Contenir (
   CONSTRAINT Contenir_idTarif_FK FOREIGN KEY (idTarif) REFERENCES Tarif (idTarif)
 ) ENGINE=InnoDB;
 
+
+INSERT INTO Evenement VALUES ('1', 'Evenement de test n°1', "Cet évènement est un test pour l'inesrion et le bon fonctionnement des fonctionnalités en relation avec les évènements.", 50);
+INSERT INTO Evenement VALUES ('2', 'Evenement de test n°2', "test encore une fois", 10);
+
+INSERT INTO Horaires(idHoraire, date, heureDeb) VALUES ('1', '2025-11-20', '08:30:00');
+INSERT INTO Horaires(idHoraire, date, heureDeb, heureFin) VALUES ('2', '2025-11-20', '08:30:00', '08:40:00');
+INSERT INTO Horaires(idHoraire, date, heureDeb) VALUES ('3', '2025-11-22', '16:30:00');
+INSERT INTO Horaires(idHoraire, date, heureDeb) VALUES ('4', '2025-11-22', '15:30:00');
+
+INSERT INTO Concerner VALUES ('1', '1');
+INSERT INTO Concerner VALUES ('2', '1');
+INSERT INTO Concerner VALUES ('3', '1');
+INSERT INTO Concerner VALUES ('4', '2');
+
+
 GRANT SELECT ON `bd_projetfa`.`Evenement` TO 'Cli_Read'@'%';

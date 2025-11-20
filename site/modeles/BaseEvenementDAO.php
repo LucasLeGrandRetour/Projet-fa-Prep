@@ -1,7 +1,7 @@
 <?php
+include_once 'configBdd.php';
 include_once 'BaseDAO.php';
 include_once 'Evenement.php';
-
 class BaseEvenementDAO extends BaseDAO
 {
     public function __construct()
@@ -11,7 +11,7 @@ class BaseEvenementDAO extends BaseDAO
 
     private function setConnexionSelonRole(string $role): void
     {
-        $this->setConnexionBase($_ENV['bd'], $_ENV[$role], $_ENV['pwd' . $role]);
+        $this->setConnexionBase($_ENV['bd'], $_ENV[$role], $_ENV['pwd' . $role], $_ENV['options']);
     }
 
     public function getLesEvenements(): array
