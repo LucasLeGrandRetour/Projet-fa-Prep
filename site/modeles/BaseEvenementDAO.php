@@ -11,7 +11,7 @@ class BaseEvenementDAO extends BaseDAO
 
     private function setConnexionSelonRole(string $role): void
     {
-        $this->setConnexionBase($_ENV['local_dsn'], $_ENV[$role], $_ENV['pwd' . $role], $_ENV['options']);
+        $this->setConnexionBase($_ENV['bd'], $_ENV[$role], $_ENV['pwd' . $role]);
     }
 
     public function getLesEvenements(): array
@@ -29,7 +29,7 @@ class BaseEvenementDAO extends BaseDAO
 
             foreach ($lesLignes as $ligne) {
                 $lesLignesObjets[] = new Evenement(
-                    (int)$ligne['id'],
+                    (int)$ligne['idEvent'],
                     (string)$ligne['libelleEvent'],
                     (string)$ligne['descriptionEvent'],
                     (int)$ligne['capaMaxi']
@@ -56,7 +56,7 @@ class BaseEvenementDAO extends BaseDAO
 
             $ligne = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $event =  new Evenement((int)$ligne['id'],
+            $event =  new Evenement((int)$ligne['idEvent'],
                     (string)$ligne['libelleEvent'],
                     (string)$ligne['descriptionEvent'],
                     (int)$ligne['capaMaxi']);

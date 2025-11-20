@@ -18,7 +18,7 @@
         <nav class="main-nav">
             <ul>
                 <li><a href="index.php">Accueil</a></li>
-                <li><a href="vues/listeEvents.php?controleur=Event&action=afficherTous">Liste des évènements</a></li>
+                <li><a href="index.php?controleur=Event&action=afficherTous">Liste des évènements</a></li>
             </ul>
         </nav>
 

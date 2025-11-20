@@ -1,11 +1,5 @@
 <?php
-$_ENV['bd'] = 'bd_projetfa';
-
-$_ENV['host'] = 'localhost';
-
-$_ENV['username'] = 'root';
-
-$_ENV['options'] = array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\'');
+$_ENV['bd'] = 'mysql:host=localhost;dbname=bd_projetfa;port=3306';
 
 //Comptes
 
