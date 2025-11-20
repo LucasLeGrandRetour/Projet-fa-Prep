@@ -11,7 +11,7 @@ class BaseEvenementDAO extends BaseDAO
 
     private function setConnexionSelonRole(string $role): void
     {
-        $this->setConnexionBase($_ENV['bd'], $_ENV[$role], $_ENV['pwd' . $role], $_ENV['options']);
+        $this->setConnexionBase($_ENV['local_dsn'], $_ENV[$role], $_ENV['pwd' . $role], $_ENV['options']);
     }
 
     public function getLesEvenements(): array
@@ -44,7 +44,7 @@ class BaseEvenementDAO extends BaseDAO
         }
     }
 
-    public function getUnEvenement($id): array
+    public function getUnEvenement($id): ?Evenement
     {
         try {
             $this->setConnexionSelonRole("CliRead");
@@ -65,7 +65,7 @@ class BaseEvenementDAO extends BaseDAO
 
         } catch (Exception $e) {
             echo "Erreur : " . $e->getMessage();
-            return []; // Retourne un tableau vide en cas d’erreur
+            return null; // Retourne un tableau vide en cas d’erreur
         }
     }
 }

@@ -1,9 +1,3 @@
-DROP DATABASE IF EXISTS db_projetfa;
-CREATE DATABASE IF NOT EXISTS db_projetfa  CHARACTER SET utf8 COLLATE utf8_general_ci;
-
-DROP USER IF EXISTS 'Cli_Read'@'%';
-CREATE USER 'Cli_Read'@'%' IDENTIFIED BY 'pwdPourCli_R';
-
 USE db_projetfa;
 
 CREATE TABLE Evenement (
@@ -18,7 +12,7 @@ CREATE TABLE Horaires (
   idHoraire INT NOT NULL AUTO_INCREMENT,
   date DATE NOT NULL,
   heureDeb TIME NOT NULL,
-  heureFin TIME NOT NULL,
+  heureFin TIME NULL,
   CONSTRAINT Horaires_PK PRIMARY KEY (idHoraire)
 ) ENGINE=InnoDB;
 
@@ -90,4 +84,4 @@ INSERT INTO Concerner VALUES ('3', '1');
 INSERT INTO Concerner VALUES ('4', '2');
 
 
-GRANT SELECT ON `bd_projetfa`.`Evenement` TO 'Cli_Read'@'%';
+GRANT SELECT ON `db_projetfa`.`Evenement` TO 'Cli_Read'@'%';
