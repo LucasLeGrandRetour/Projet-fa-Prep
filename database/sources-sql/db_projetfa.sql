@@ -73,7 +73,9 @@ CREATE TABLE Contenir (
 
 INSERT INTO Evenement (idEvent, libelleEvent, descriptionEvent) VALUES
 (1, 'Evenement de test n°1', "Cet évènement est un test pour l'insertion et le bon fonctionnement des fonctionnalités en relation avec les évènements."),
-(2, 'Evenement de test n°2', "Test encore une fois.");
+(2, 'Evenement de test n°2', "Test encore une fois."),(3, 'Evenement de test n°3', "Test encore une fois.")
+,(4, 'Evenement de test n°2', "Test encore une fois."),(5, 'Evenement de test n°2', "Test encore une fois."),
+(6, 'Evenement de test n°2', "Test encore une fois."),(7, 'Evenement de test n°2', "Test encore une fois.");
 
 INSERT INTO Horaires (idHoraire, date, heureDeb, heureFin) VALUES
 (1, '2025-11-20', '08:30:00', NULL),

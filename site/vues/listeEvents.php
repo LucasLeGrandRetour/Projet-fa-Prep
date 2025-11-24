@@ -27,16 +27,15 @@
         </div>
 
         <div class="event-grid">
-            <!-- Exemple d'évènement généré depuis la BD en PHP -->
-            <!-- Boucle PHP ici -->
-            <!-- foreach($events as $event) { ... } -->
-
-            <div class="event-card">
-                <img src="img/event.jpg" alt="event">
-                <div class="event-title">Évènement n°1</div>
-                <button class="details-btn">Détails</button>
-            </div>
-
+            <?php
+            foreach($lesEvents as $event) {
+                echo '<div class="event-card">
+                        <img src="img/event.jpg" alt="event">
+                        <div class="event-title">' . htmlspecialchars($event->getLibEvent()) . '</div>
+                        <a href="index.php?controleur=Event&action=afficherUn&id=' . htmlspecialchars($event->getId()) .'" class="details-link"> Détails </a>
+                      </div>';
+            }
+            ?>
         </div>
     </div>
 </div>

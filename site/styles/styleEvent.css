@@ -5,6 +5,7 @@
     width: 100%;
     background: #f5f5f5;
     padding: 20px 0;
+    height: 85vh;
 }
 
 /* --- SIDEBAR (Filtres) --- */
@@ -106,18 +107,21 @@ select {
     color: #4a3334;
 }
 
-.details-btn {
+/* --- NOUVEAU : bouton détails version <a> --- */
+.details-link {
+    display: inline-block;
     margin-top: 12px;
     padding: 8px 16px;
-    border: none;
     background: #c7002e;
     color: white;
     border-radius: 10px;
     cursor: pointer;
     font-weight: 600;
+    text-decoration: none;
+    text-align: center;
 }
 
-.details-btn:hover {
+.details-link:hover {
     background: #a00024;
 }
 
