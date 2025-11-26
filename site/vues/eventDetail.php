@@ -13,7 +13,9 @@
         <h2 class="title">A propos</h2>
 
         <p class="description">
-            {DESCRIPTION_DE_LA_BD}
+            <?php
+                echo $event->getDescEvent();
+            ?>
         </p>
     </div>
 
@@ -21,17 +23,19 @@
 
         <div class="bloc">
             <div class="icon">👤</div>
-            <div class="bloc-title">Nombre de reservation restante</div>
-            <div class="bloc-value">{NB_PLACE}</div>
+            <div class="bloc-title">Nombre de places restante</div>
+            <div class="bloc-value"><?= $places; ?></div>
         </div>
 
         <div class="bloc">
             <div class="icon">💶</div>
-            <div class="bloc-title">Tarif</div>
-            <div class="sub">Tarif enfant</div>
-            <div class="bloc-value">{PRIX_ENFANT} €</div>
-            <div class="sub">Tarif adulte</div>
-            <div class="bloc-value">{PRIX_ADULTE} €</div>
+            <div class="bloc-title">Tarif(s)</div>
+            <?php
+                foreach ($tarifs as $tarif) {
+                    echo '<div class="sub">' . $tarif->getLibelleTarif() . '</div>';
+                    echo '<div class="bloc-value">' . $tarif->getPrix() . ' €</div>';
+                }
+            ?>
         </div>
 
         <div class="btn-zone">
