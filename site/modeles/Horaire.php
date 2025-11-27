@@ -39,7 +39,7 @@ class Horaire
      * @param string $heureDeb    Heure de début.
      * @param string $heureFin    Heure de fin.
      */
-    public function __construct(int $idHoraire, int $idConcerner, string $date, string $heureDeb, string $heureFin) 
+    public function __construct(int $idHoraire, int $idConcerner, string $date, string $heureDeb, string $heureFin)
     {
         $this->idHoraire = $idHoraire;
         $this->idConcerner = $idConcerner;

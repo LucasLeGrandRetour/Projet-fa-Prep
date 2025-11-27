@@ -1,3 +1,4 @@
+<?php ob_start(); ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -25,7 +26,6 @@
         </nav>
 
         <div class="burger-menu">
-            <span></span>
             <span></span>
             <span></span>
         </div>
@@ -59,3 +59,4 @@
 </body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoYz1FQZrF2b4QmZ6bZrZlqQ2o5p6b6R9E7x0zW5y3y1Z" crossorigin="anonymous"></script>
 </html>
+<?php ob_end_flush(); ?>
