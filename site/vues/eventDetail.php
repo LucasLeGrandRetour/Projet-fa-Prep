@@ -24,7 +24,7 @@
         <div class="bloc">
             <div class="icon">👤</div>
             <div class="bloc-title">Nombre de places restante</div>
-            <div class="bloc-value"><?= $places; ?></div>
+            <div class="bloc-value"><?= "A modif selon l'horaire" ?></div>
         </div>
 
         <div class="bloc">
