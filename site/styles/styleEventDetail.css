@@ -6,6 +6,7 @@
     background: #f5f5f5;
     padding: 30px;
     gap: 25px;
+    height: 80vh;
 }
 
 /* --- LEFT PART --- */
@@ -77,12 +78,14 @@
 
 .bloc-value {
     margin-top: 8px;
-    background: #fff8f4;
-    padding: 8px 12px;
-    border-radius: 6px;
+    /* J'ai supprimé le background et la bordure orange ici */
+    /* background: #fff8f4; */
+    /* border: 2px solid #caa68f; */
+    /* padding: 8px 12px; */ /* Padding réduit aussi pour ne pas faire un trou vide */
     width: fit-content;
-    border: 2px solid #caa68f;
     font-weight: 700;
+    font-size: 16px; /* Légèrement plus gros pour compenser */
+    color: #333;
 }
 
 /* --- BOUTONS --- */
