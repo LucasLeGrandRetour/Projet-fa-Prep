@@ -30,7 +30,7 @@
             <?php
             foreach($lesEvents as $event) {
                 echo '<div class="event-card">
-                        <img src="img/event.jpg" alt="event">
+                        <img src="../images/musee.jpg" alt="event">
                         <div class="event-title">' . htmlspecialchars($event->getLibEvent()) . '</div>
                         <a href="index.php?controleur=Event&action=afficherUn&id=' . htmlspecialchars($event->getId()) .'" class="details-link"> Détails </a>
                       </div>';

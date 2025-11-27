@@ -54,13 +54,19 @@ INSERT INTO Evenement (idEvent, libelleEvent, descriptionEvent) VALUES
 (1, 'Evenement de test n°1', "Cet évènement est un test pour l'insertion et le bon fonctionnement des fonctionnalités en relation avec les évènements."),
 (2, 'Evenement de test n°2', "Test encore une fois."),(3, 'Evenement de test n°3', "Test encore une fois.")
 ,(4, 'Evenement de test n°2', "Test encore une fois."),(5, 'Evenement de test n°2', "Test encore une fois."),
-(6, 'Evenement de test n°2', "Test encore une fois."),(7, 'Evenement de test n°2', "Test encore une fois.");
+(6, 'Evenement de test n°2', "Test encore une fois."),(13, 'Evenement de test n°2', "Test encore une fois."),
+(7, 'Evenement de test n°2', "Test encore une fois."),(14, 'Evenement de test n°2', "Test encore une fois."),
+(8, 'Evenement de test n°2', "Test encore une fois."),(15, 'Evenement de test n°2', "Test encore une fois."),
+(9, 'Evenement de test n°2', "Test encore une fois."),(16, 'Evenement de test n°2', "Test encore une fois."),
+(10, 'Evenement de test n°2', "Test encore une fois."),(17, 'Evenement de test n°2', "Test encore une fois."),
+(11, 'Evenement de test n°2', "Test encore une fois."),(18, 'Evenement de test n°2', "Test encore une fois."),
+(12, 'Evenement de test n°2', "Test encore une fois."),(19, 'Evenement de test n°2', "Test encore une fois.");
 
 INSERT INTO Horaires (idHoraire, date, heureDeb, heureFin) VALUES
 (1, '2025-11-20', '08:30:00', NULL),
-(2, '2025-11-20', '08:30:00', '08:40:00'),
-(3, '2025-11-22', '16:30:00', NULL),
-(4, '2025-11-22', '15:30:00', NULL);
+(2, '2025-11-28', '08:30:00', '08:40:00'),
+(3, '2025-11-27', '16:30:00', NULL),
+(4, '2025-11-29', '15:30:00', NULL);
 
 INSERT INTO Tarif (idTarif, libelleTarif, prix) VALUES
 (1, 'Enfant', 10.0),
