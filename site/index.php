@@ -33,6 +33,9 @@
 
     
         <?php
+            ini_set('display_errors', 1);
+            error_reporting(E_ALL);
+
 			// si aucune information n'est présente dans l'url, le controleur par défaut sera 'accueil'
 			if (isset($_GET['controleur']))
 				$controleur = filter_var($_GET['controleur'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);

@@ -1,4 +1,4 @@
-/* ---------------- PAGE DÉTAIL / RÉSERVATION ---------------- */
+/* --- PAGE DÉTAIL / RÉSERVATION --- */
 
 .details-container {
     display: flex;
@@ -6,7 +6,8 @@
     background: #f5f5f5;
     padding: 30px;
     gap: 25px;
-    height: 80vh;
+    /* Retire height si nécessaire, pour laisser plus d'espace aux éléments */
+    min-height: 80vh; /* Assure que le conteneur prend au moins 80% de la hauteur de la fenêtre */
 }
 
 /* --- LEFT PART --- */
@@ -15,7 +16,7 @@
     background: white;
     padding: 20px;
     border-radius: 16px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 .details-img {
@@ -56,7 +57,7 @@
     border-radius: 12px;
     padding: 18px;
     margin-bottom: 20px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 .icon {
@@ -78,13 +79,9 @@
 
 .bloc-value {
     margin-top: 8px;
-    /* J'ai supprimé le background et la bordure orange ici */
-    /* background: #fff8f4; */
-    /* border: 2px solid #caa68f; */
-    /* padding: 8px 12px; */ /* Padding réduit aussi pour ne pas faire un trou vide */
     width: fit-content;
     font-weight: 700;
-    font-size: 16px; /* Légèrement plus gros pour compenser */
+    font-size: 16px;
     color: #333;
 }
 
@@ -93,6 +90,7 @@
     margin-top: 30px;
     display: flex;
     gap: 20px;
+    justify-content: center; /* Aligner les boutons au centre */
 }
 
 .cancel-btn {
@@ -132,5 +130,15 @@
 
     .details-right {
         padding-left: 0;
+    }
+
+    /* Gérer l'espacement et la taille des boutons sur mobile */
+    .btn-zone {
+        flex-direction: column; /* Empile les boutons verticalement */
+        gap: 10px;
+    }
+
+    .cancel-btn, .reserve-btn {
+        width: 100%; /* Boutons qui prennent toute la largeur */
     }
 }

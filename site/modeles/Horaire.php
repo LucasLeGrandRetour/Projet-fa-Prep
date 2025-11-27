@@ -41,6 +41,7 @@ class Horaire
      */
     public function __construct(int $idHoraire, int $idConcerner, string $date, string $heureDeb, string $heureFin) 
     {
+        $this->idHoraire = $idHoraire;
         $this->idConcerner = $idConcerner;
         $this->date = $date;
         $this->heureDeb = $heureDeb;
