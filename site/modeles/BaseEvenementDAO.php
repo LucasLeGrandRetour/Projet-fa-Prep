@@ -215,6 +215,49 @@ class BaseEvenementDAO extends BaseDAO
         }
     }
 
+    public function getHorairesEvenementParDate(int $idEvent, string $date): array
+    {
+        try {
+            $this->setConnexionSelonRole("CliAll");
+
+            // Requête SQL pour récupérer les horaires correspondant à l'événement et à la date
+            $sql = "SELECT 
+                        H.idHoraire,
+                        C.idConcerner,
+                        H.date,
+                        H.heureDeb,
+                        H.heureFin
+                    FROM Concerner C
+                    JOIN Horaires H ON H.idHoraire = C.idHoraire
+                    WHERE C.idEvent = ? AND H.date = ?";  // Ajout du filtre pour la date
+
+            $stmt = $this->prepare($sql);
+            $stmt->execute([$idEvent, $date]);  // On passe l'ID de l'événement et la date
+
+            // Récupérer les résultats sous forme de tableau associatif
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Transformation des résultats en objets Horaire
+            $horaires = [];
+            foreach ($rows as $ligne) {
+                $horaires[] = new Horaire(
+                    (int)$ligne['idHoraire'],
+                    (int)$ligne['idConcerner'],
+                    (string)$ligne['date'],
+                    (string)$ligne['heureDeb'],
+                    (string)$ligne['heureFin']
+                );
+            }
+
+            return $horaires;
+
+        } catch (Exception $e) {
+            echo "Erreur : " . $e->getMessage();
+            return [];
+        }
+    }
+
+
     /**
      * Calcule le nombre total de places réservées pour un événement.
      *

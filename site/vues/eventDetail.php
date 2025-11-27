@@ -5,14 +5,12 @@
         <link rel="stylesheet" href="../styles/styleEventDetail.css">
 
         <div class="details-info">
-            <!-- Affichage du titre de l'événement -->
             <h2 class="title"><?= htmlspecialchars($event->getLibEvent()) ?></h2>
             <span class="duration">45 min</span>
         </div>
 
         <h2 class="title">A propos</h2>
         <p class="description">
-            <!-- Affichage de la description de l'événement -->
             <?= nl2br(htmlspecialchars($event->getDescEvent())) ?>
         </p>
     </div>
@@ -64,21 +62,16 @@
                        name="dateVisite" 
                        id="dateVisite"
                        class="input-date" 
-                       min="<?= date('Y-m-d') ?>" 
+                       value=""
                        required>
 
                 <label for="horaireSelection" class="sub" style="margin-top: 15px; display: block; font-weight: 700; color: #4a3334;">Heure de début</label>
-                <select name="horaireSelection" id="horaireSelection" class="input-date" required>
+                <select name="horaireSelection" 
+                        id="horaireSelection" 
+                        class="input-date" 
+                        required>
                     <option value="">-- Choisir une heure --</option>
-                    <?php
-                    if (isset($horaires) && is_array($horaires)):
-                        foreach ($horaires as $horaire):
-                            echo '<option value="' . $horaire->getIdHoraire() . '">';
-                            echo htmlspecialchars($horaire->getHeureDeb()) . ' - ' . htmlspecialchars($horaire->getHeureFin());
-                            echo '</option>';
-                        endforeach;
-                    endif;
-                    ?>
+                    <!-- Les options seront mises à jour avec JavaScript -->
                 </select>
             </div>
 
@@ -90,3 +83,25 @@
         </form>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Lorsque la date est changée, on récupère les horaires correspondants
+        $('#dateVisite').on('change', function() {
+            var dateChoisie = $(this).val();  // Récupère la date choisie
+            var idEvenement = $('input[name="idEvenement"]').val();  // Récupère l'ID de l'événement
+
+            // Envoie la requête AJAX pour récupérer les horaires correspondant à la date
+            $.ajax({
+                url: '../controleurs/get_horaires.php',  // Fichier PHP pour récupérer les horaires
+                type: 'POST',
+                data: { date: dateChoisie, idEvenement: idEvenement },  // Envoie la date et l'ID de l'événement
+                success: function(response) {
+                    console.log("Réponse du serveur : " + response);  // Affiche la réponse dans la console
+                    $('#horaireSelection').html(response);  // Met à jour la liste des horaires avec la réponse
+                }
+            });
+        });
+    });
+</script>

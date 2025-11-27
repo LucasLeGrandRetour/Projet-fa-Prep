@@ -24,7 +24,6 @@ switch ($action) {
             $id = $_GET['id'];
             $event = $connexionBD->getUnEvenement($id);
             $tarifs = $connexionBD->getLesTarifs();
-            $horaires = $connexionBD->getHorairesEvenement($id);
             include_once 'vues/eventDetail.php';
         } else {
             include_once 'vues/accueil.html';

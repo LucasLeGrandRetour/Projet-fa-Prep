@@ -94,6 +94,6 @@ GRANT SELECT ON `db_projetfa`.`Evenement` TO 'Cli_Read'@'%';
 
 GRANT SELECT ON `db_projetfa`.* TO 'Cli_All'@'%';
 
-GRANT SELECT, INSERT ON `db_projetfa`.`Concerner` TO 'Cli_Write'@'%';
+GRANT SELECT, UPDATE ON `db_projetfa`.`Concerner` TO 'Cli_Write'@'%';
 GRANT SELECT, INSERT ON `db_projetfa`.`Reservation` TO 'Cli_Write'@'%';
 GRANT SELECT, INSERT ON `db_projetfa`.`Contenir` TO 'Cli_Write'@'%';
