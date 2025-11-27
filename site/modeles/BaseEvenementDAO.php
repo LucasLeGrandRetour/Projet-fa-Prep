@@ -112,6 +112,7 @@ class BaseEvenementDAO extends BaseDAO
             $this->setConnexionSelonRole("CliAll");
 
             $sql = "SELECT 
+                        H.idHoraire,
                         C.idConcerner,
                         H.date,
                         H.heureDeb,
@@ -128,6 +129,7 @@ class BaseEvenementDAO extends BaseDAO
 
             foreach ($rows as $ligne) {
                 $horaires[] = new Horaire(
+                    (int)$ligne['idHoraire'],
                     (int)$ligne['idConcerner'],
                     (string)$ligne['date'],
                     (string)$ligne['heureDeb'],

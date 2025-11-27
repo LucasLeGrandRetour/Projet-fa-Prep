@@ -8,6 +8,11 @@ class Horaire
     /**
      * @var int Identifiant de la ligne Concerner.
      */
+    private int $idHoraire;
+
+    /**
+     * @var int Identifiant de la ligne Concerner.
+     */
     private int $idConcerner;
 
     /**
@@ -29,11 +34,12 @@ class Horaire
      * Constructeur de l'horaire.
      *
      * @param int    $idConcerner Identifiant de la ligne Concerner.
+     * @param int    $idConcerner Identifiant de la ligne Concerner.
      * @param string $date        Date de l'horaire.
      * @param string $heureDeb    Heure de début.
      * @param string $heureFin    Heure de fin.
      */
-    public function __construct(int $idConcerner, string $date, string $heureDeb, string $heureFin) 
+    public function __construct(int $idHoraire, int $idConcerner, string $date, string $heureDeb, string $heureFin) 
     {
         $this->idConcerner = $idConcerner;
         $this->date = $date;
@@ -41,6 +47,16 @@ class Horaire
         $this->heureFin = $heureFin;
     }
 
+    /**
+     * Récupère l'identifiant de la ligne Concerner.
+     *
+     * @return int
+     */
+    public function getIdHoraire(): int 
+    { 
+        return $this->idHoraire; 
+
+    }
     /**
      * Récupère l'identifiant de la ligne Concerner.
      *
