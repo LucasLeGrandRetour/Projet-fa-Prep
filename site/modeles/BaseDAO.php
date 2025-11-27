@@ -35,7 +35,7 @@ class BaseDAO
             die('Erreur de connexion à la base de données : ' . $erreur->getMessage());
         }
     }
-
+        
     /**
      * Prépare une requête SQL pour exécution.
      *
@@ -46,5 +46,45 @@ class BaseDAO
     protected function prepare(string $sql): PDOStatement
     {
         return $this->db->prepare($sql);
+    }
+
+    /**
+     * Récupère l'ID de la dernière entrée insérée.
+     * 
+     * @return int Identifiant de la dernière insertion.
+     */
+    protected function lastInsertId(): int
+    {
+        return $this->db->lastInsertId();
+    }
+
+    /**
+     * Démarre une transaction.
+     *
+     * @return bool Retourne vrai si la transaction commence avec succès, sinon faux.
+     */
+    protected function beginTransaction(): bool
+    {
+        return $this->db->beginTransaction();
+    }
+
+    /**
+     * Valide la transaction.
+     *
+     * @return bool Retourne vrai si la transaction est validée avec succès, sinon faux.
+     */
+    protected function commit(): bool
+    {
+        return $this->db->commit();
+    }
+
+    /**
+     * Annule la transaction en cours.
+     *
+     * @return bool Retourne vrai si la transaction est annulée avec succès, sinon faux.
+     */
+    protected function rollBack(): bool
+    {
+        return $this->db->rollBack();
     }
 }

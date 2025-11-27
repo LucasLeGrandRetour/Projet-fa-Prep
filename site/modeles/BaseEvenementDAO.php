@@ -219,26 +219,50 @@ class BaseEvenementDAO extends BaseDAO
      * @param int $id ID de l'événement.
      * @return int Nombre de places réservées.
      */
-    public function setReservation(int $id): int 
+    public function setReservation(int $idConcern, int $idTarif, int $nbPlace): string 
     {
         try {
             $this->setConnexionSelonRole("CliWrite");
+            $this->beginTransaction();
 
-            $sql = "SELECT COALESCE(SUM(c.nbPlace), 0) AS nbPlaces
-                    FROM Reservation r
-                    INNER JOIN Contenir c ON c.idReserv = r.idReserv
-                    WHERE r.idEvent = ?";
+            if ($idConcern <= 0 || $idTarif <= 0 || $nbPlace <= 0) {
+                return "Erreur : Données invalides pour la réservation.";
+            }
 
+            $sql = "INSERT INTO Reservation (dateReserv, idConcerner) VALUES (NOW(), ?)";
             $stmt = $this->prepare($sql);
-            $stmt->execute([$id]);
+            $stmt->execute([$idConcern]);
+            $id = $this->lastInsertId();
 
-            $ligne = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$id) {
+                $this->rollBack();
+                return "Erreur : Impossible de créer la réservation.";
+            }
 
-            return (int)$ligne['nbPlaces'];
+            $sql = "UPDATE Concerner SET capaMaxi = capaMaxi - ? WHERE idConcerner = ?";
+            $stmt = $this->prepare($sql);
+            $stmt->execute([$nbPlace, $idConcern]);
 
+            if ($stmt->rowCount() === 0) {
+                $this->rollBack();
+                return "Erreur : L'événement n'existe pas ou la capacité est insuffisante.";
+            }
+
+            $sql = "INSERT INTO Contenir(idReserv, idTarif, nbPlace) VALUES (?, ?, ?)";
+            $stmt = $this->prepare($sql);
+            $stmt->execute([$id, $idTarif, $nbPlace]);
+
+            if ($stmt->rowCount() === 0) {
+                $this->rollBack();
+                return "Erreur : Impossible d'ajouter les informations de tarif et places.";
+            }
+
+            $this->commit();
+
+            return "Réservation effectuée avec succès.";
         } catch (Exception $e) {
-            echo "Erreur : " . $e->getMessage();
-            return 0;
+            $this->rollBack();
+            return "Erreur : " . $e->getMessage();
         }
     }
 }
