@@ -144,56 +144,6 @@ class BaseEvenementDAO extends BaseDAO
             return [];
         }
     }
-    
-    /**
-     * Récupère les horaires d'un événement pour une date donnée.
-     * Cette version est utilisée par AJAX et le chargement initial.
-     *
-     * @param int $idEvent ID de l'événement.
-     * @param string $date Date au format YYYY-MM-DD.
-     * @return Horaire[] Tableau d'objets Horaire.
-     */
-    public function getHorairesEvenementParDate(int $idEvent, string $date): array
-    {
-        try {
-            $this->setConnexionSelonRole("CliAll");
-
-            // Requête SQL pour récupérer les horaires correspondant à l'événement et à la date
-            $sql = "SELECT 
-                        H.idHoraire,
-                        C.idConcerner,
-                        H.date,
-                        H.heureDeb,
-                        H.heureFin
-                    FROM Concerner C
-                    JOIN Horaires H ON H.idHoraire = C.idHoraire
-                    WHERE C.idEvent = ? AND H.date = ?";  // Ajout du filtre pour la date
-
-            $stmt = $this->prepare($sql);
-            $stmt->execute([$idEvent, $date]);  // On passe l'ID de l'événement et la date
-
-            // Récupérer les résultats sous forme de tableau associatif
-            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            // Transformation des résultats en objets Horaire
-            $horaires = [];
-            foreach ($rows as $ligne) {
-                $horaires[] = new Horaire(
-                    (int)$ligne['idHoraire'],
-                    (int)$ligne['idConcerner'],
-                    (string)$ligne['date'],
-                    (string)$ligne['heureDeb'],
-                    (string)$ligne['heureFin']
-                );
-            }
-
-            return $horaires;
-
-        } catch (Exception $e) {
-            echo "Erreur : " . $e->getMessage();
-            return [];
-        }
-    }
 
     /**
      * Récupère tous les tarifs.
@@ -239,7 +189,6 @@ class BaseEvenementDAO extends BaseDAO
         try {
             $this->setConnexionSelonRole("CliAll");
 
-            // 1. Récupérer la capacité maximale fixe
             $sql = "SELECT capaMaxi FROM Concerner WHERE idConcerner = ?";
             $stmt = $this->prepare($sql);
             $stmt->execute([$idConcerner]);
@@ -249,7 +198,6 @@ class BaseEvenementDAO extends BaseDAO
 
             $capaMax = (int)$data['capaMaxi'];
 
-            // 2. Calculer les places déjà réservées
             $sql = "SELECT IFNULL(SUM(nbPlace),0)
                     FROM Contenir CO
                     JOIN Reservation R ON R.idReserv = CO.idReserv
@@ -259,7 +207,6 @@ class BaseEvenementDAO extends BaseDAO
             $stmt->execute([$idConcerner]);
             $nb = (int)$stmt->fetchColumn();
 
-            // 3. Retourner la différence
             return $capaMax - $nb;
 
         } catch (Exception $e) {
@@ -268,27 +215,65 @@ class BaseEvenementDAO extends BaseDAO
         }
     }
 
+    public function getHorairesEvenementParDate(int $idEvent, string $date): array
+    {
+        try {
+            $this->setConnexionSelonRole("CliAll");
+
+            // Requête SQL pour récupérer les horaires correspondant à l'événement et à la date
+            $sql = "SELECT 
+                        H.idHoraire,
+                        C.idConcerner,
+                        H.date,
+                        H.heureDeb,
+                        H.heureFin
+                    FROM Concerner C
+                    JOIN Horaires H ON H.idHoraire = C.idHoraire
+                    WHERE C.idEvent = ? AND H.date = ?";  // Ajout du filtre pour la date
+
+            $stmt = $this->prepare($sql);
+            $stmt->execute([$idEvent, $date]);  // On passe l'ID de l'événement et la date
+
+            // Récupérer les résultats sous forme de tableau associatif
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Transformation des résultats en objets Horaire
+            $horaires = [];
+            foreach ($rows as $ligne) {
+                $horaires[] = new Horaire(
+                    (int)$ligne['idHoraire'],
+                    (int)$ligne['idConcerner'],
+                    (string)$ligne['date'],
+                    (string)$ligne['heureDeb'],
+                    (string)$ligne['heureFin']
+                );
+            }
+
+            return $horaires;
+
+        } catch (Exception $e) {
+            echo "Erreur : " . $e->getMessage();
+            return [];
+        }
+    }
+
+
     /**
-     * Enregistre une nouvelle réservation.
+     * Calcule le nombre total de places réservées pour un événement.
      *
-     * @param int $idConcern ID de la ligne Concerner (créneau horaire).
-     * @param array $panier Tableau des tarifs [idTarif => nbPlace].
-     * @param float $total Montant total de la réservation (pour vérification).
-     * @return int ID de la réservation insérée ou 0 en cas d'échec.
+     * @param int $id ID de l'événement.
+     * @return int Nombre de places réservées.
      */
-    public function setReservation(int $idConcern, array $panier, float $total): int 
+    public function setReservation(int $idConcern, int $idTarif, int $nbPlace): string 
     {
         try {
             $this->setConnexionSelonRole("CliWrite");
             $this->beginTransaction();
 
-            if ($idConcern <= 0 || $total <= 0 || empty($panier)) {
-                return 0; // FIX: Retourne 0 au lieu d'une chaîne
+            if ($idConcern <= 0 || $idTarif <= 0 || $nbPlace <= 0) {
+                return "Erreur : Données invalides pour la réservation.";
             }
-            
-            // NOTE: Le code DOIT vérifier ici si getPlacesRestantes(idConcern) est > 0 pour toutes les places demandées
-            
-            // 1. Insertion de la réservation principale
+
             $sql = "INSERT INTO Reservation (dateReserv, idConcerner) VALUES (NOW(), ?)";
             $stmt = $this->prepare($sql);
             $stmt->execute([$idConcern]);
@@ -296,74 +281,33 @@ class BaseEvenementDAO extends BaseDAO
 
             if (!$id) {
                 $this->rollBack();
-                return 0;
+                return "Erreur : Impossible de créer la réservation.";
             }
 
-            // FIX: Suppression de la ligne d'UPDATE INCORRECTE qui modifie capaMaxi.
-            /* $sql = "UPDATE Concerner SET capaMaxi = capaMaxi - ? WHERE idConcerner = ?";
+            $sql = "UPDATE Concerner SET capaMaxi = capaMaxi - ? WHERE idConcerner = ?";
             $stmt = $this->prepare($sql);
-            $stmt->execute([$nbPlace, $idConcern]); 
-            */
+            $stmt->execute([$nbPlace, $idConcern]);
 
-            // 2. Insertion des lignes de détail (Contenir)
-            foreach ($panier as $idTarif => $nbPlace) {
-                if ($nbPlace > 0) {
-                    $sql = "INSERT INTO Contenir(idReserv, idTarif, nbPlace) VALUES (?, ?, ?)";
-                    $stmt = $this->prepare($sql);
-                    $stmt->execute([$id, $idTarif, $nbPlace]);
+            if ($stmt->rowCount() === 0) {
+                $this->rollBack();
+                return "Erreur : L'événement n'existe pas ou la capacité est insuffisante.";
+            }
 
-                    if ($stmt->rowCount() === 0) {
-                        $this->rollBack();
-                        return 0;
-                    }
-                }
+            $sql = "INSERT INTO Contenir(idReserv, idTarif, nbPlace) VALUES (?, ?, ?)";
+            $stmt = $this->prepare($sql);
+            $stmt->execute([$id, $idTarif, $nbPlace]);
+
+            if ($stmt->rowCount() === 0) {
+                $this->rollBack();
+                return "Erreur : Impossible d'ajouter les informations de tarif et places.";
             }
 
             $this->commit();
 
-            return (int)$id;
+            return "Réservation effectuée avec succès.";
         } catch (Exception $e) {
             $this->rollBack();
-            // Vous pouvez loguer l'erreur ici : error_log("Erreur de réservation: " . $e->getMessage());
-            return 0;
-        }
-    }
-
-    /**
-     * Récupère les détails d'une réservation (informations + ligne tarif/quantité).
-     *
-     * @param int $idReserv
-     * @return array ['reservation' => array, 'contenu' => array]
-     */
-    public function getReservationDetail(int $idReserv): array
-    {
-        try {
-            $this->setConnexionSelonRole("CliAll");
-
-                $sql = "SELECT R.idReserv, R.dateReserv, C.idConcerner, E.idEvent, E.libelleEvent, H.date as dateHoraire, H.heureDeb, H.heureFin
-                    FROM Reservation R
-                    JOIN Concerner C ON C.idConcerner = R.idConcerner
-                    JOIN Evenement E ON E.idEvent = C.idEvent
-                    JOIN Horaires H ON H.idHoraire = C.idHoraire
-                    WHERE R.idReserv = ?";
-
-            $stmt = $this->prepare($sql);
-            $stmt->execute([$idReserv]);
-            $reservation = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            // Récupère les lignes de tarif
-            $sql2 = "SELECT CO.idTarif, CO.nbPlace, T.libelleTarif, T.prix
-                    FROM Contenir CO
-                    JOIN Tarif T ON T.idTarif = CO.idTarif
-                    WHERE CO.idReserv = ?";
-            $stmt2 = $this->prepare($sql2);
-            $stmt2->execute([$idReserv]);
-            $contenu = $stmt2->fetchAll(PDO::FETCH_ASSOC);
-
-            return ['reservation' => $reservation ?: [], 'contenu' => $contenu ?: []];
-        } catch (Exception $e) {
-            echo "Erreur : " . $e->getMessage();
-            return ['reservation' => [], 'contenu' => []];
+            return "Erreur : " . $e->getMessage();
         }
     }
 }

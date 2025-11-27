@@ -1,5 +1,4 @@
 <?php
-// Assurez-vous d'inclure les fichiers nécessaires pour accéder à la base de données et aux classes
 include_once "../modeles/BaseEvenementDAO.php";
 include_once '../configBdd.php';
 
@@ -14,14 +13,22 @@ if (isset($_POST['date']) && isset($_POST['idEvenement'])) {
     // Récupérer les horaires qui correspondent à la date et à l'événement
     $horaires = $connexionBD->getHorairesEvenementParDate($idEvenement, $dateChoisie);
 
-    // Débogage : Afficher les horaires récupérés
-    var_dump($horaires);  // Vérifie ce que contient $horaires
-
     // Si des horaires sont trouvés, on les renvoie sous forme de <option>
     if (!empty($horaires)) {
         foreach ($horaires as $horaire) {
-            echo '<option value="' . $horaire->getIdHoraire() . '">';
+            // Récupération du nombre de places restantes
+            $placesRestantes = $connexionBD->getPlacesRestantes($horaire->getIdConcerner());
+
+            // Génération de l'option HTML avec les places restantes
+            echo '<option value="' . $horaire->getIdConcerner() . '" data-places="' . $placesRestantes . '"';
+            if ($placesRestantes <= 0) {
+                echo ' disabled';
+            }
+            echo '>';
             echo htmlspecialchars($horaire->getHeureDeb()) . ' - ' . htmlspecialchars($horaire->getHeureFin());
+            if ($placesRestantes <= 0) {
+                echo ' (complet)';
+            }
             echo '</option>';
         }
     } else {

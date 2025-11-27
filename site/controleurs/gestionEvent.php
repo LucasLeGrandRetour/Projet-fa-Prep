@@ -29,52 +29,6 @@ switch ($action) {
             include_once 'vues/accueil.html';
         }
         break;
-
-    case 'getHorairesAjax':
-        // Renvoie les horaires pour un événement donné et une date via JSON
-        $connexionBD = new BaseEvenementDAO();
-        if (isset($_GET['id']) && isset($_GET['date'])) {
-            $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
-            $date = filter_var($_GET['date'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            if ($id && $date) {
-                $horaires = $connexionBD->getHorairesEvenementParDate($id, $date);
-                header('Content-Type: application/json');
-                // transformer en tableau simple
-                $data = [];
-                foreach ($horaires as $h) {
-                    $placesDispo = $connexionBD->getPlacesRestantes($h->getIdConcerner());
-                    $data[] = [
-                        'idHoraire' => $h->getIdHoraire(),
-                        'idConcerner' => $h->getIdConcerner(),
-                        'date' => $h->getDate(),
-                        'heureDeb' => $h->getHeureDeb(),
-                        'heureFin' => $h->getHeureFin(),
-                        'placesDisponibles' => $placesDispo
-                    ];
-                }
-                echo json_encode($data);
-                exit;
-            }
-        }
-        // Si mauvaise requête, renvoyer empty
-        header('Content-Type: application/json');
-        echo json_encode([]);
-        exit;
-    case 'voirReservation':
-        // Afficher le détail d'une réservation
-        $connexionBD = new BaseEvenementDAO();
-        if (isset($_GET['id'])) {
-            $idReserv = filter_var($_GET['id'], FILTER_VALIDATE_INT);
-            if ($idReserv) {
-                $data = $connexionBD->getReservationDetail($idReserv);
-                $reservation = $data['reservation'];
-                $contenu = $data['contenu'];
-                include_once 'vues/reservationDetail.php';
-                exit;
-            }
-        }
-        header('Location: index.php?controleur=Event&action=afficherTous');
-        exit;
     case 'reservation':
         // Gère la réservation envoyée en POST
         $connexionBD = new BaseEvenementDAO();

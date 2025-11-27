@@ -128,150 +128,50 @@
         </form>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    
-    // Variables nécessaires
-    const eventId = <?= (int)$event->getId() ?>;
-    const dateInput = document.getElementById('dateVisite');
-    const horaireSelect = document.getElementById('horaireSelection');
-    const placesLeftEl = document.getElementById('placesLeft');
-    const form = document.querySelector('form[action^="index.php?controleur=Event&action=reservation"]');
-    
-    // --- UTILITIES ---
-    function formatPlaces(n) {
-        if (n === null || n === undefined || isNaN(n)) return '-';
-        if (n <= 0) return 'Complet';
-        return n + ' place' + (n > 1 ? 's' : '');
-    }
+$(document).ready(function() {
+    // Lors de la sélection de la date, on charge les horaires correspondants
+    $('#dateVisite').on('change', function() {
+        var dateChoisie = $(this).val();  // Récupère la date choisie
+        var idEvenement = $('input[name="idEvenement"]').val();  // Récupère l'ID de l'événement
 
-    function formatMoney(v) {
-        // Formatte l'argent en français (ex: 1 200,50 €)
-        return Number(v).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
-    }
-
-    // --- PLACES RESTANTES LOGIC ---
-    function updatePlacesLeftFromSelected() {
-        if (!horaireSelect) return;
-        const opt = horaireSelect.selectedOptions[0];
-        
-        if (!opt || !placesLeftEl) {
-             if(placesLeftEl) placesLeftEl.textContent = '-';
-             return;
-        }
-        
-        const places = opt.dataset.places !== undefined ? parseInt(opt.dataset.places, 10) : null;
-        placesLeftEl.textContent = formatPlaces(places);
-    }
-
-    // --- HORAIRES DYNAMIQUES (AJAX) ---
-    async function loadHorairesForDate(dateStr) {
-        horaireSelect.innerHTML = '<option value="">-- Chargement... --</option>';
-        placesLeftEl.textContent = '...';
-
-        if (!dateStr || !eventId) return;
-
-        try {
-            // NOTE: Ceci nécessite que l'action 'getHorairesAjax' soit implémentée dans gestionEvent.php
-            const resp = await fetch(`index.php?controleur=Event&action=getHorairesAjax&id=${eventId}&date=${encodeURIComponent(dateStr)}`);
-            if (!resp.ok) throw new Error('Erreur réseau');
-            const horaires = await resp.json();
-            
-            horaireSelect.innerHTML = '';
-            
-            const placeholder = document.createElement('option');
-            placeholder.value = '';
-            placeholder.textContent = '-- Choisir une heure --';
-            horaireSelect.appendChild(placeholder);
-
-            if (!horaires || horaires.length === 0) {
-                placeholder.textContent = 'Aucun horaire disponible';
-                placeholder.disabled = true;
-                placesLeftEl.textContent = '-';
-                return;
+        // Envoie la requête AJAX pour récupérer les horaires correspondant à la date
+        $.ajax({
+            url: '../controleurs/get_horaires.php',  // Fichier PHP pour récupérer les horaires
+            type: 'POST',
+            data: { date: dateChoisie, idEvenement: idEvenement },  // Envoie la date et l'ID de l'événement
+            success: function(response) {
+                console.log("Réponse du serveur : " + response);  // Affiche la réponse dans la console
+                $('#horaireSelection').html(response);  // Met à jour la liste des horaires avec la réponse
             }
-            
-            horaires.forEach(h => {
-                const opt = document.createElement('option');
-                // h.idConcerner et h.placesDisponibles sont envoyés par le contrôleur
-                opt.value = h.idConcerner;
-                opt.dataset.places = h.placesDisponibles;
-                opt.textContent = `${h.heureDeb} - ${h.heureFin}`;
-                if (h.placesDisponibles <= 0) {
-                    opt.disabled = true;
-                    opt.textContent += ' (complet)';
-                }
-                horaireSelect.appendChild(opt);
-            });
-
-            if (horaireSelect.options.length === 2 && !horaireSelect.options[1].disabled) {
-                horaireSelect.selectedIndex = 1;
-            }
-            
-            updatePlacesLeftFromSelected(); 
-            
-        } catch (err) {
-            console.error('Erreur chargement horaires:', err);
-            horaireSelect.innerHTML = '<option value="" disabled>-- Erreur de chargement --</option>';
-            placesLeftEl.textContent = 'Erreur';
-        }
-    }
-
-    // --- TOTAL CALCULATION LOGIC ---
-    const totalPriceEl = document.getElementById('totalPrice');
-    const totalInput = document.getElementById('totalTarif');
-    const panierInputs = document.querySelectorAll('input.panier-input');
-
-    function updateTotal() {
-        let total = 0.0;
-        panierInputs.forEach(function (inp) {
-            const q = parseInt(inp.value, 10) || 0;
-            // Récupère le prix stocké dans l'attribut data-price
-            const price = parseFloat(inp.dataset.price || '0') || 0;
-            total += q * price;
         });
-        totalInput.value = total.toFixed(2);
-        if (totalPriceEl) totalPriceEl.textContent = formatMoney(total);
-    }
-
-    // --- INITIALISATION ET ÉCOUTEURS D'ÉVÉNEMENTS ---
-    
-    // 1. Gestion des horaires dynamiques au changement de date
-    if (dateInput) {
-        const initialDate = dateInput.value || dateInput.min || new Date().toISOString().slice(0, 10);
-        dateInput.value = initialDate;
-        
-        // Si la liste est vide (pas d'horaires chargés par PHP), on charge via JS
-        if (horaireSelect.options.length <= 1 || horaireSelect.options[1].disabled) {
-            loadHorairesForDate(initialDate);
-        } else {
-            updatePlacesLeftFromSelected();
-        }
-        
-        dateInput.addEventListener('change', function (e) {
-            const d = e.target.value;
-            loadHorairesForDate(d);
-        });
-    }
-
-    // 2. Mise à jour des places restantes au changement d'horaire
-    if (horaireSelect) {
-        horaireSelect.addEventListener('change', updatePlacesLeftFromSelected);
-    }
-
-    // 3. Gestion du total du panier
-    panierInputs.forEach(function (inp) {
-        inp.addEventListener('change', updateTotal);
-        inp.addEventListener('input', updateTotal);
     });
-    updateTotal(); // Calcul initial au chargement de la page
 
-    // 4. Form Submission (s'assurer du total)
-    if (form) {
-        form.addEventListener('submit', function () {
-            updateTotal();
-        }, true);
-    }
+    // Lorsque l'utilisateur change d'horaire, mettre à jour les places restantes
+    $('#horaireSelection').on('change', function() {
+        var selectedOption = $(this).find('option:selected');
+        var placesRestantes = selectedOption.data('places');  // Récupère les places restantes
+
+        // Affiche les places restantes
+        if (placesRestantes !== undefined) {
+            $('#placesLeft').text(placesRestantes <= 0 ? 'Complet' : placesRestantes + ' place' + (placesRestantes > 1 ? 's' : ''));
+        }
+    });
+
+    // Calcul du total du panier
+    $('input.panier-input').on('input change', function() {
+        var total = 0;
+        $('input.panier-input').each(function() {
+            var quantity = $(this).val() || 0;
+            var price = $(this).data('price');
+            total += (quantity * price);
+        });
+
+        $('#totalPrice').text(total.toFixed(2) + ' €');
+        $('#totalTarif').val(total.toFixed(2));
+    });
+
 });
 </script>
